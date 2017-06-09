@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">BI_SUD</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="header_life_assured_details">LIFE ASSURED DETAILS</string>
+    <string name="text_name_of_life_assured">NAME OF THE LIFE ASSURED</string>
+    <string name="text_dob">DATE OF BIRTH</string>
+    <string name="text_gender">GENDER</string>
+    <string name="text_smoking">SMOKING</string>
+    <string name="header_proposer_details">PROPOSER DETAILS</string>
+    <string name="text_email">EMAIL</string>
+    <string name="text_mobile">MOBILE</string>
+    <string name="text_branch_location">BRANCH LOCATION</string>
+    <string name="hint_first_name">FIRST NAME</string>
+    <string name="hint_last_name">LAST NAME</string>
+    <string name="hint_date_format">DD/MM/YY</string>
+    <string name="hint_type_email">TYPE EMAIL</string>
+    <string name="hint_type_mobile">TYPE MOBILE</string>
+    <string name="hint_select_state">SELECT STATE</string>
+    <string name="hint_select_city">SELECT CITY</string>
+    <string name="hint_select_branch">SELECT BRANCH</string>
+    <string name="header_other_details">OTHER DETAILS</string>
+    <string name="text_child_age">CHILD AGE</string>
+    <string name="text_pt">PT</string>
+    <string name="text_ppt">PPT</string>
+    <string name="text_mode">MODE</string>
+    <string name="text_option_level_one">OPTION LEVEL 1</string>
+    <string name="text_sum_assured">SUM ASSURED</string>
+    <string name="text_sum_assured_in_words">SUM ASSURED IN WORD</string>
+    <string name="text_modal_premium">MODAL PREMIUM</string>
+    <string name="text_annual_premium">ANNUAL PREMIUM</string>
+    <string name="text_add_rider">ADD RIDER</string>
+    <string name="btn_text_validate">VALIDATE</string>
+    <string name="btn_text_cancel">CANCEL</string>
+    <string name="header_basic_information">BASIC INFORMATION</string>
+    <string name="header_product_information">PRODUCT INFORMATION</string>
+    <string name="header_riders">RIDERS</string>
+    <string name="header_summary">HEADER SUMMARY</string>
+    <string name="main_header_child_endowment_plan">CHILD ENDOWMENT PLAN</string>
+    <string name="main_header_product_name">PRODUCT NAME</string>
+    <string name="text_same_as_above">SAME AS ABOVE</string>
+    <string name="smoking_prompt">NO</string>
+    <string-array name="smoking_arrays">
+        <item>NO</item>
+        <item>YES</item>
+    </string-array>
+</resources>
