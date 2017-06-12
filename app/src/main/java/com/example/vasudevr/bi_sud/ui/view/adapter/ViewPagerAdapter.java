@@ -1,7 +1,9 @@
 package com.example.vasudevr.bi_sud.ui.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
@@ -12,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
+import com.example.vasudevr.bi_sud.ui.view.fragment.BasicInformationFragment;
+import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
 
 import java.util.Random;
 
@@ -21,9 +25,9 @@ import java.util.Random;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
-    private final Random random = new Random();
     private int mSize;
     private Context mContext;
+    private LandingFragment mFragment;
 
     // Keep all Images in array
     public int[] mThumbIds = {
@@ -33,8 +37,9 @@ public class ViewPagerAdapter extends PagerAdapter {
             R.mipmap.twitter, R.mipmap.pinterest,
     };
 
-    public ViewPagerAdapter(Context context) {
+    public ViewPagerAdapter(Context context, LandingFragment fragment) {
         mContext = context;
+        mFragment = fragment;
     }
 
    /* public ViewPagerAdapter(int count) {
@@ -55,13 +60,23 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override public Object instantiateItem(ViewGroup parent, int position) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.product_indictor_layout, parent, false);
-        ImageView productImage = (ImageView) layout.findViewById(R.id.product_image_view);
-        TextView productName = (TextView) layout.findViewById(R.id.product_name);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.product_indictor_layout, parent, false);
+        CardView productCardView = (CardView) view.findViewById(R.id.card_view);
+        ImageView productImage = (ImageView) view.findViewById(R.id.product_image_view);
+        TextView productName = (TextView) view.findViewById(R.id.product_name);
         productImage.setImageResource(mThumbIds[position]);
         productName.setText("PRODUCT NAME");
-        parent.addView(layout);
-        return layout;
+        parent.addView(view);
+        productCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = mFragment.getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, new BasicInformationFragment())
+                        .commitNow();
+            }
+        });
+        return view;
     }
 
     public void addItem() {

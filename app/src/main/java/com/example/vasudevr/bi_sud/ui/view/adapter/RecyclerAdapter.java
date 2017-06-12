@@ -1,6 +1,7 @@
 package com.example.vasudevr.bi_sud.ui.view.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
 import com.example.vasudevr.bi_sud.custom.CircleIndicator;
+import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import static com.example.vasudevr.bi_sud.R.id.viewpager;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> implements Filterable {
 
     private Context mContext;
+    private LandingFragment mFragment;
     //ValueFilter mValueFilter;
 
     @Override
@@ -50,8 +53,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         }
     }
 
-    public RecyclerAdapter(Context context) {
+    public RecyclerAdapter(Context context, LandingFragment fragment) {
         this.mContext = context;
+        this.mFragment = fragment;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         int categoryPosition = position + 1;
         holder.mTextView.setText(mContext.getString(R.string.text_category) + " " + categoryPosition);
-        holder.mViewPager.setAdapter(new ViewPagerAdapter(mContext));
+        holder.mViewPager.setAdapter(new ViewPagerAdapter(mContext, mFragment));
         holder.mCircleIndicator.setViewPager(holder.mViewPager);
         holder.mViewPager.setCurrentItem(2);
     }

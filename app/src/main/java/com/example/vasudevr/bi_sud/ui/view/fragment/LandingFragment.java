@@ -33,7 +33,7 @@ public class LandingFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_landing, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        mRecyclerAdapter = new RecyclerAdapter(getActivity());
+        mRecyclerAdapter = new RecyclerAdapter(getActivity(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
