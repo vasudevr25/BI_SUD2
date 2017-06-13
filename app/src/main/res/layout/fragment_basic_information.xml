@@ -210,12 +210,14 @@
                     android:id="@+id/switch1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/textSameAsAbove"
-                    android:layout_toRightOf="@+id/textProposerDetails"
                     android:textOff="NO"
-                    android:textOn="YES" />
+                    android:textOn="YES"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_below="@+id/textSameAsAbove"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
 
@@ -296,7 +298,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textBranchLocation"
                     android:layout_marginTop="10dp"
-                    android:background="@android:drawable/btn_dropdown" />
+                    android:spinnerMode="dropdown"/>
 
 
                 <Spinner
@@ -317,6 +319,7 @@
                     android:background="@android:drawable/btn_dropdown" />
 
             </RelativeLayout>
+
         </RelativeLayout>
 
     </ScrollView>

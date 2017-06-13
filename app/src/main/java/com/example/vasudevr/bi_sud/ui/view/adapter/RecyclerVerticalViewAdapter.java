@@ -1,35 +1,28 @@
 package com.example.vasudevr.bi_sud.ui.view.adapter;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
-import com.example.vasudevr.bi_sud.custom.CircleIndicator;
 import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.vasudevr.bi_sud.R.id.collapseActionView;
-import static com.example.vasudevr.bi_sud.R.id.design_menu_item_text;
-import static com.example.vasudevr.bi_sud.R.id.viewpager;
 
 /**
  * Created by vasudevr on 6/9/2017.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> implements Filterable {
+public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVerticalViewAdapter.MyViewHolder> implements Filterable {
 
     private Context mContext;
+    private RecyclerHorizontalViewAdapter mRecyclerHorizontalViewAdapter;
     private LandingFragment mFragment;
     //ValueFilter mValueFilter;
 
@@ -40,20 +33,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public ViewPager mViewPager;
-        public CircleIndicator mCircleIndicator;
-        public TextView mTextView;
+        public RecyclerView recyclerView;
+        public TextView textView;
 
 
         public MyViewHolder(View view) {
             super(view);
-            mTextView = (TextView) view.findViewById(R.id.text_category);
-            mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-            mCircleIndicator = (CircleIndicator) view.findViewById(R.id.indicator);
+            textView = (TextView) view.findViewById(R.id.text_category);
+            recyclerView = (RecyclerView) view.findViewById(R.id.horizontalScrollView);
         }
     }
 
-    public RecyclerAdapter(Context context, LandingFragment fragment) {
+    public RecyclerVerticalViewAdapter(Context context, LandingFragment fragment) {
         this.mContext = context;
         this.mFragment = fragment;
     }
@@ -68,10 +59,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         int categoryPosition = position + 1;
-        holder.mTextView.setText(mContext.getString(R.string.text_category) + " " + categoryPosition);
-        holder.mViewPager.setAdapter(new ViewPagerAdapter(mContext, mFragment));
-        holder.mCircleIndicator.setViewPager(holder.mViewPager);
-        holder.mViewPager.setCurrentItem(2);
+        holder.textView.setText(mContext.getString(R.string.text_category) + " " + categoryPosition);
+        mRecyclerHorizontalViewAdapter  = new RecyclerHorizontalViewAdapter(mContext, mFragment);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        holder.recyclerView.setLayoutManager(mLayoutManager);
+        holder.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        holder.recyclerView.setAdapter(mRecyclerHorizontalViewAdapter);
     }
 
     @Override
