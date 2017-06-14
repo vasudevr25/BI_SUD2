@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
+import com.example.vasudevr.bi_sud.ui.helper.LandingHelper;
 import com.example.vasudevr.bi_sud.ui.view.adapter.RecyclerVerticalViewAdapter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -43,7 +44,7 @@ public class LandingFragment extends Fragment implements TextView.OnEditorAction
         mEditSearch = (EditText) rootView.findViewById(R.id.editSearch);
         mEditSearch.addTextChangedListener(this);
         mEditSearch.setOnEditorActionListener(this);
-
+        callApi();
         mRecyclerAdapter = new RecyclerVerticalViewAdapter(getActivity(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -89,5 +90,10 @@ public class LandingFragment extends Fragment implements TextView.OnEditorAction
 
     @Override
     public void afterTextChanged(Editable s) {
+    }
+
+    public void callApi() {
+        LandingHelper helper = new LandingHelper(getActivity());
+        helper.callApi();
     }
 }

@@ -1,9 +1,11 @@
 package com.example.vasudevr.bi_sud.ui.helper;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 
 import com.example.vasudevr.bi_sud.network.ApiClient;
 import com.example.vasudevr.bi_sud.network.ApiInterface;
+import com.example.vasudevr.bi_sud.ui.view.LandingActivity;
 import com.example.vasudevr.bi_sud.ui.view.MainActivity;
 
 import retrofit2.Call;
@@ -14,15 +16,15 @@ import retrofit2.Response;
  * Created by vasudevr on 6/8/2017.
  */
 
-public class MainHelper {
+public class LandingHelper {
 
-    private static final String TAG = MainHelper.class.getSimpleName();
-    private final MainActivity mActivityContext;
+    private static final String TAG = LandingHelper.class.getSimpleName();
+    private final Context mActivityContext;
     private final ProgressDialog mDialog;
     private ApiInterface mApiInterface;
 
 
-    public MainHelper(MainActivity ctx) {
+    public LandingHelper(Context ctx) {
 
         mActivityContext = ctx;
         mDialog = new ProgressDialog(mActivityContext);

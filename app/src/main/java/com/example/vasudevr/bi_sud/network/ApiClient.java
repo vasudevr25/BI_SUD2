@@ -21,7 +21,7 @@ public class ApiClient {
 
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("")
+                .baseUrl("http://bitoolservices.beta.nvest.in/NSureServices.svc/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
