@@ -41,11 +41,6 @@
     <string name="main_header_child_endowment_plan">CHILD ENDOWMENT PLAN</string>
     <string name="main_header_product_name">PRODUCT NAME</string>
     <string name="text_same_as_above">SAME AS ABOVE</string>
-    <string name="smoking_prompt">NO</string>
-    <string-array name="smoking_arrays">
-        <item>NO</item>
-        <item>YES</item>
-    </string-array>
     <string name="text_category">CATEGORY</string>
     <string name="search_product">Search Product</string>
 </resources>

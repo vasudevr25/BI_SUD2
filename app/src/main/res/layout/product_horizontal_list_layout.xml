@@ -27,20 +27,18 @@
             android:id="@+id/product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:gravity="center|bottom"
             android:textColor="@color/colorSkyBlue"
-            android:textSize="10sp" />
+            android:textSize="10sp"/>
 
         <TextView
             android:id="@+id/product_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:gravity="center|bottom"
+            android:gravity="center_horizontal"
             android:text="Lorem Ipsum is simply dummy\ntext of the printing and type setting industry"
             android:textColor="@android:color/black"
-            android:textSize="6sp" />
+            android:textSize="7sp" />
 
     </LinearLayout>
 

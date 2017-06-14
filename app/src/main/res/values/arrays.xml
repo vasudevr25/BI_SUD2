@@ -14,4 +14,14 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+
+    <string-array name="smoking_array">
+        <item>NO</item>
+        <item>YES</item>
+    </string-array>
+
+    <string-array name="gender_array">
+        <item>MALE</item>
+        <item>FEMALE</item>
+    </string-array>
 </resources>

@@ -111,11 +111,11 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
 
-
                     <EditText
                         android:id="@+id/editDatePicker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:cursorVisible="false"
                         android:drawableRight="@android:drawable/ic_menu_my_calendar"
                         android:hint="@string/hint_date_format" />
 
@@ -172,36 +172,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/selectGender"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:hint="GENDER"
+                        android:layout_marginRight="5dp"
+                        app:met_floatingLabel="highlight"
+                        app:theme="@style/AppSpinnerTheme" />
 
-                        <EditText
-                            android:id="@+id/editGender"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="MALE"
-                            android:imeOptions="actionDone"
-                            android:singleLine="true" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/selectSmoking"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <EditText
-                            android:id="@+id/editSmoking"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="NO"
-                            android:imeOptions="actionDone"
-                            android:singleLine="true" />
-
-                    </android.support.design.widget.TextInputLayout>
+                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:hint="SMOKING"
+                        app:met_floatingLabel="highlight"
+                        app:theme="@style/AppSpinnerTheme" />
                 </LinearLayout>
 
             </RelativeLayout>
@@ -247,7 +236,8 @@
                     android:layout_marginRight="28dp"
                     android:gravity="center_horizontal"
                     android:textOff="NO"
-                    android:textOn="YES" />
+                    android:textOn="YES"
+                    android:checked="true"/>
 
             </RelativeLayout>
 
@@ -340,8 +330,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textBranchLocation"
+                    android:layout_marginTop="10dp"
                     android:hint="@string/hint_select_state"
-                    app:met_floatingLabel="normal" />
+                    app:met_floatingLabel="highlight"
+                    app:theme="@style/AppSpinnerTheme" />
 
 
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -350,7 +342,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/selectState"
                     android:hint="@string/hint_select_city"
-                    app:met_floatingLabel="normal" />
+                    app:met_floatingLabel="highlight"
+                    app:theme="@style/AppSpinnerTheme" />
 
 
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -359,17 +352,20 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/selectCity"
                     android:hint="@string/hint_select_branch"
-                    app:met_floatingLabel="normal" />
+                    app:met_floatingLabel="highlight"
+                    app:theme="@style/AppSpinnerTheme" />
 
             </RelativeLayout>
 
             <Button
+                android:id="@+id/button_next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/headerOtherLayout"
-                android:text="NEXT"
                 android:background="@drawable/rounded_next"
-                android:textColor="@android:color/white"/>
+                android:onClick="onClick"
+                android:text="NEXT"
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
 

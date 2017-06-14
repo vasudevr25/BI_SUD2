@@ -11,6 +11,11 @@
         <item name="actionBarStyle">@style/ActionBar</item>
     </style>
 
+    <style name="AppSpinnerTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

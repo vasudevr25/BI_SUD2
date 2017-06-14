@@ -19,6 +19,7 @@ import com.example.vasudevr.bi_sud.R;
 import com.example.vasudevr.bi_sud.ui.listener.IMain;
 import com.example.vasudevr.bi_sud.ui.view.fragment.BasicInformationFragment;
 import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
+import com.example.vasudevr.bi_sud.ui.view.fragment.ProductInformationFragment;
 
 /**
  * Created by vasudevr on 6/9/2017.
@@ -64,7 +65,7 @@ public class LandingActivity extends AppCompatActivity implements IMain {
     @SuppressLint("CommitTransaction")
     @Override
     public void updateFragment(String fragmentName) {
-        Fragment fragment = null;
+        Fragment fragment;
         if (fragmentName.equalsIgnoreCase(LANDING_FRAGMENT_NAME)) {
             fragment = new LandingFragment();
             if (fragment != null) {
@@ -81,6 +82,8 @@ public class LandingActivity extends AppCompatActivity implements IMain {
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
         Log.d(TAG, "inside onBackPressed fragment :" + fragment);
         if (fragment instanceof BasicInformationFragment) {
+            updateFragment(LANDING_FRAGMENT_NAME);
+        } else if (fragment instanceof ProductInformationFragment) {
             updateFragment(LANDING_FRAGMENT_NAME);
         } else {
             finish();
