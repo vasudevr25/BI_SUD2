@@ -281,7 +281,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_type_email"
                         android:imeOptions="actionDone"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:inputType="textEmailAddress"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -309,7 +310,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_type_mobile"
                         android:imeOptions="actionDone"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:inputType="phone"/>
 
                 </android.support.design.widget.TextInputLayout>
 

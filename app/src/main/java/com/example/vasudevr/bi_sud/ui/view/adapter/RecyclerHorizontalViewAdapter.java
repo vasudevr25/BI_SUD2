@@ -16,8 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
+import com.example.vasudevr.bi_sud.network.model.ProductList;
 import com.example.vasudevr.bi_sud.ui.view.fragment.BasicInformationFragment;
 import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
+
+import java.util.ArrayList;
 
 /**
  * Created by vasudevr on 6/13/2017.
@@ -27,6 +30,7 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
 
     private Context mContext;
     private LandingFragment mFragment;
+    private ArrayList<ProductList> productArrayList;
 
     // Keep all Images in array
     public int[] mThumbIds = {
@@ -56,9 +60,10 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    public RecyclerHorizontalViewAdapter(Context context, LandingFragment fragment) {
+    public RecyclerHorizontalViewAdapter(Context context, LandingFragment fragment, ArrayList<ProductList> arrayList) {
         this.mContext = context;
         this.mFragment = fragment;
+        this.productArrayList = arrayList;
     }
 
     @Override
@@ -71,8 +76,8 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(RecyclerHorizontalViewAdapter.MyViewHolder holder, int position) {
         Log.d("RecyclerHorizontal", "Position::::" + position);
-        holder.productImage.setImageResource(mThumbIds[position]);
-        holder.productName.setText("PRODUCT NAME");
+        //holder.productImage.setImageResource(mThumbIds[position]);
+        holder.productName.setText(productArrayList.get(position).getProductName());
         holder.productLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +91,6 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemCount() {
-        return mThumbIds.length;
+        return productArrayList.size();
     }
 }

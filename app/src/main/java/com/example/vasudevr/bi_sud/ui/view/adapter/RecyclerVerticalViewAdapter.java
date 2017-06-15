@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
+import com.example.vasudevr.bi_sud.network.model.ProductList;
 import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
+
+import java.util.ArrayList;
 
 /**
  * Created by vasudevr on 6/9/2017.
@@ -24,12 +27,9 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
     private Context mContext;
     private RecyclerHorizontalViewAdapter mRecyclerHorizontalViewAdapter;
     private LandingFragment mFragment;
-    //ValueFilter mValueFilter;
-
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
+    private ArrayList<ProductList> productArrayList;
+    private ArrayList<ProductList> filteredList;
+    ValueFilter mValueFilter;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -44,9 +44,11 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
         }
     }
 
-    public RecyclerVerticalViewAdapter(Context context, LandingFragment fragment) {
+    public RecyclerVerticalViewAdapter(Context context, LandingFragment fragment, ArrayList<ProductList> arrayList) {
         this.mContext = context;
         this.mFragment = fragment;
+        this.productArrayList = arrayList;
+        this.filteredList = arrayList;
     }
 
     @Override
@@ -59,12 +61,14 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         int categoryPosition = position + 1;
-        holder.textView.setText(mContext.getString(R.string.text_category) + " " + categoryPosition);
-        mRecyclerHorizontalViewAdapter  = new RecyclerHorizontalViewAdapter(mContext, mFragment);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        holder.recyclerView.setLayoutManager(mLayoutManager);
-        holder.recyclerView.setItemAnimator(new DefaultItemAnimator());
-        holder.recyclerView.setAdapter(mRecyclerHorizontalViewAdapter);
+        if(productArrayList != null && productArrayList.get(position).getCategoryId().equals(categoryPosition)) {
+            holder.textView.setText(mContext.getString(R.string.text_category) + " " + categoryPosition);
+            mRecyclerHorizontalViewAdapter = new RecyclerHorizontalViewAdapter(mContext, mFragment, filteredList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            holder.recyclerView.setLayoutManager(mLayoutManager);
+            holder.recyclerView.setItemAnimator(new DefaultItemAnimator());
+            holder.recyclerView.setAdapter(mRecyclerHorizontalViewAdapter);
+        }
     }
 
     @Override
@@ -73,7 +77,7 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
     }
 
 
-   /* @Override
+    @Override
     public Filter getFilter() {
         if (mValueFilter == null) {
             mValueFilter = new ValueFilter();
@@ -84,31 +88,35 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
     private class ValueFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-            if (constraint != null && constraint.length() > 0) {
-                List filterList = new ArrayList();
-                for (int i = 0; i < mStringFilterList.size(); i++) {
-                    if ((mStringFilterList.get(i).toUpperCase()).contains(constraint.toString().toUpperCase())) {
-                        filterList.add(mStringFilterList.get(i));
+            FilterResults filterResults = new FilterResults();
+            if (constraint!=null && constraint.length()>0) {
+                ArrayList<ProductList> tempList = new ArrayList();
+
+                // search content in friend list
+                for (ProductList productData : productArrayList) {
+                    if (productData.getProductName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(productData);
                     }
                 }
-                results.count = filterList.size();
-                results.values = filterList;
+
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
             } else {
-                results.count = mStringFilterList.size();
-                results.values = mStringFilterList;
+                filterResults.count = productArrayList.size();
+                filterResults.values = productArrayList;
             }
-            return results;
+
+            return filterResults;
 
         }
 
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            mData = (List) results.values;
+            filteredList = (ArrayList<ProductList>) results.values;
             notifyDataSetChanged();
         }
 
-    }*/
+    }
 
 }

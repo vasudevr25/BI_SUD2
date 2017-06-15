@@ -43,4 +43,7 @@
     <string name="text_same_as_above">SAME AS ABOVE</string>
     <string name="text_category">CATEGORY</string>
     <string name="search_product">Search Product</string>
+    <string name="err_msg_email">Not a valid email address!</string>
+    <string name="err_msg_number">Not a valid mobile number!</string>
+
 </resources>

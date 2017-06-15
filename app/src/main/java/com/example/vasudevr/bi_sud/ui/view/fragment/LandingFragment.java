@@ -1,7 +1,5 @@
 package com.example.vasudevr.bi_sud.ui.view.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -21,8 +20,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
+import com.example.vasudevr.bi_sud.network.model.ProductList;
 import com.example.vasudevr.bi_sud.ui.helper.LandingHelper;
 import com.example.vasudevr.bi_sud.ui.view.adapter.RecyclerVerticalViewAdapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -35,6 +40,7 @@ public class LandingFragment extends Fragment implements TextView.OnEditorAction
     private RecyclerView mRecyclerView;
     private RecyclerVerticalViewAdapter mRecyclerAdapter;
     private EditText mEditSearch;
+    private ArrayList<ProductList> productListArrayList;
 
     @Nullable
     @Override
@@ -44,8 +50,13 @@ public class LandingFragment extends Fragment implements TextView.OnEditorAction
         mEditSearch = (EditText) rootView.findViewById(R.id.editSearch);
         mEditSearch.addTextChangedListener(this);
         mEditSearch.setOnEditorActionListener(this);
-        callApi();
-        mRecyclerAdapter = new RecyclerVerticalViewAdapter(getActivity(), this);
+        Gson gson = new Gson();
+        Bundle bundle = getArguments();
+        Type type = new TypeToken<ArrayList<ProductList>>() {
+        }.getType();
+        String listData = bundle.getString("PRODUCT_KEY");
+        productListArrayList = gson.fromJson(listData, type);
+        mRecyclerAdapter = new RecyclerVerticalViewAdapter(getActivity(), this, productListArrayList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -60,40 +71,51 @@ public class LandingFragment extends Fragment implements TextView.OnEditorAction
 
             switch (v.getId()) {
                 case R.id.editSearch:
-                    doSearch();
                     InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    //mEditSearch.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search_black_18dp, 0);
                     break;
             }
         }
         return false;
     }
 
-    public void doSearch() {
-
+    public void doSearch(CharSequence charSequence) {
+        mRecyclerAdapter.getFilter().filter(charSequence);
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(mEditSearch.isFocusable() && mEditSearch.length() != 0) {
+        doSearch(s);
+
+        if (mEditSearch.isFocusable() && mEditSearch.length() != 0) {
             mEditSearch.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_clear_black_18dp, 0);
         } else {
             mEditSearch.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search_black_18dp, 0);
         }
+
+        mEditSearch.setOnTouchListener(new View.OnTouchListener() {
+            final int DRAWABLE_RIGHT = 2;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    int leftEdgeOfRightDrawable = mEditSearch.getRight()
+                            - mEditSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+                        // clicked on clear icon
+                        mEditSearch.setText("");
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-    }
-
-    public void callApi() {
-        LandingHelper helper = new LandingHelper(getActivity());
-        helper.callApi();
     }
 }
