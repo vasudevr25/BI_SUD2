@@ -72,7 +72,7 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 2;
     }
 
 

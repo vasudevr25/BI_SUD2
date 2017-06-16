@@ -80,15 +80,10 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
     ArrayList<BranchList> mBranchList;
     ArrayList<CityList> mCityList;
     ArrayList<StateList> mStateList;
-    private Context mContext;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public BasicInformationFragment(Context context) {
-        this.mContext = context;
     }
 
     @Nullable
@@ -97,7 +92,7 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
         View rootView = inflater.inflate(R.layout.fragment_basic_information, container, false);
         ButterKnife.inject(this, rootView);
         setEditTextListener();
-        StateListHelper helper = new StateListHelper(this, mContext);
+        StateListHelper helper = new StateListHelper(this, getActivity());
         helper.callApi();
         return rootView;
     }
@@ -208,7 +203,7 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         id = stateList.get(i).getKey();
                     }
                 }
-                CityListHelper helper = new CityListHelper(BasicInformationFragment.this, mContext);
+                CityListHelper helper = new CityListHelper(BasicInformationFragment.this, getActivity());
                 if (id != 0) {
                     helper.callApi(id);
                 }
@@ -243,7 +238,7 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         id = cityList.get(i).getCityId();
                     }
                 }
-                BranchListHelper helper = new BranchListHelper(BasicInformationFragment.this, mContext);
+                BranchListHelper helper = new BranchListHelper(BasicInformationFragment.this, getActivity());
                 if (id != 0) {
                     helper.callApi(id);
                 }
@@ -289,12 +284,12 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                 break;
 
             case R.id.selectState:
-                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                if (UiUtils.checkInternetConnection(getActivity())) {
                     if (mStateList != null && !mStateList.isEmpty()) {
                         mSelectStateSpinner.setError(null);
                         setStateListDetailsUI(mStateList);
                     } else {
-                        StateListHelper helper = new StateListHelper(this, mContext);
+                        StateListHelper helper = new StateListHelper(this, getActivity());
                         helper.callApi();
                         /*ArrayAdapter<String> adapterState = new ArrayAdapter<>(getActivity(),
                                 android.R.layout.simple_dropdown_item_1line);
@@ -304,13 +299,13 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         mSelectStateSpinner.setError("");*/
                     }
                 } else {
-                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
-                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                    UiUtils.showErrorAlert(getActivity().getString(R.string.error_dialog_header),
+                            getActivity().getString(R.string.offline_mode_error), getActivity(), 0);
                 }
                 break;
 
             case R.id.selectCity:
-                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                if (UiUtils.checkInternetConnection(getActivity())) {
                     if (mCityList != null && !mCityList.isEmpty()) {
                         mSelectCitySpinner.setError(null);
                         setCityListDetailsUI(mCityList);
@@ -323,13 +318,13 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         mSelectCitySpinner.setError(getString(R.string.err_msg_city));
                     }
                 } else {
-                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
-                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                    UiUtils.showErrorAlert(getActivity().getString(R.string.error_dialog_header),
+                            getActivity().getString(R.string.offline_mode_error), getActivity(), 0);
                 }
                 break;
 
             case R.id.selectBranch:
-                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                if (UiUtils.checkInternetConnection(getActivity())) {
                     if (mBranchList != null && !mBranchList.isEmpty()) {
                         mSelectBranchSpinner.setError(null);
                         setBranchListDetailsUI(mBranchList);
@@ -341,8 +336,8 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         mSelectBranchSpinner.setError(getString(R.string.err_msg_branch));
                     }
                 } else {
-                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
-                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                    UiUtils.showErrorAlert(getActivity().getString(R.string.error_dialog_header),
+                            getActivity().getString(R.string.offline_mode_error), getActivity(), 0);
                 }
                 break;
         }

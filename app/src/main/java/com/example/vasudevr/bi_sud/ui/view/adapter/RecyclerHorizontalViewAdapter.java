@@ -87,7 +87,7 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
             public void onClick(View v) {
                 FragmentManager fragmentManager = mFragment.getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new BasicInformationFragment(mContext))
+                        .replace(R.id.fragment_container, new BasicInformationFragment())
                         .commitNow();
             }
         });
