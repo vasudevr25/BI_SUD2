@@ -19,6 +19,12 @@ public class ProductList {
     @SerializedName("CurrentStatus")
     @Expose
     private Object currentStatus;
+    @SerializedName("Description")
+    @Expose
+    private String description;
+    @SerializedName("ImageUrl")
+    @Expose
+    private String imageUrl;
     @SerializedName("EndDate")
     @Expose
     private Object endDate;
@@ -69,6 +75,22 @@ public class ProductList {
 
     public Integer getCompanyId() {
         return companyId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setCompanyId(Integer companyId) {

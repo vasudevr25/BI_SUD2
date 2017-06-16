@@ -108,6 +108,7 @@ public class LandingActivity extends AppCompatActivity implements IMain {
     }
 
     public void setProductDetails(ArrayList<ProductList> arrayList) {
+
         mProductArrayList = arrayList;
         mFragmentManager = getSupportFragmentManager();
         LandingFragment fragment = new LandingFragment();

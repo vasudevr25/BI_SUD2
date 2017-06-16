@@ -1,23 +1,22 @@
 package com.example.vasudevr.bi_sud.ui.view.fragment;
 
-import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.telephony.PhoneNumberUtils;
-import android.text.InputType;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,20 +28,19 @@ import com.example.vasudevr.bi_sud.R;
 import com.example.vasudevr.bi_sud.network.model.BranchList;
 import com.example.vasudevr.bi_sud.network.model.CityList;
 import com.example.vasudevr.bi_sud.network.model.StateList;
+import com.example.vasudevr.bi_sud.ui.helper.BranchListHelper;
 import com.example.vasudevr.bi_sud.ui.helper.CityListHelper;
 import com.example.vasudevr.bi_sud.ui.helper.StateListHelper;
-import com.example.vasudevr.bi_sud.ui.listener.OnUpdateListListener;
+import com.example.vasudevr.bi_sud.ui.view.LandingActivity;
+import com.example.vasudevr.bi_sud.utils.UiUtils;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by vasudevr on 6/12/2017.
@@ -50,10 +48,14 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class BasicInformationFragment extends Fragment implements View.OnClickListener
         , View.OnFocusChangeListener
-        , TextView.OnEditorActionListener, AdapterView.OnItemSelectedListener {
+        , TextView.OnEditorActionListener {
 
     @InjectView(R.id.selectState)
     MaterialBetterSpinner mSelectStateSpinner;
+    @InjectView(R.id.selectCity)
+    MaterialBetterSpinner mSelectCitySpinner;
+    @InjectView(R.id.selectBranch)
+    MaterialBetterSpinner mSelectBranchSpinner;
     @InjectView(R.id.button_next)
     Button mButtonNext;
     @InjectView(R.id.editDatePicker)
@@ -72,9 +74,21 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
     TextInputLayout mNumberLayout;
     private int mYear, mMonth, mDay;
 
+    private String mSelectedStateText = null;
+    private String mSelectedCityText = null;
+    private String mSelectedBranchText = null;
+    ArrayList<BranchList> mBranchList;
+    ArrayList<CityList> mCityList;
+    ArrayList<StateList> mStateList;
+    private Context mContext;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public BasicInformationFragment(Context context) {
+        this.mContext = context;
     }
 
     @Nullable
@@ -82,9 +96,9 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_basic_information, container, false);
         ButterKnife.inject(this, rootView);
-        StateListHelper helper = new StateListHelper(this);
-        helper.callApi();
         setEditTextListener();
+        StateListHelper helper = new StateListHelper(this, mContext);
+        helper.callApi();
         return rootView;
     }
 
@@ -94,7 +108,17 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
         mEditDateText.setOnClickListener(this);
         mEmailText.setOnEditorActionListener(this);
         mEditNumber.setOnEditorActionListener(this);
-        mSelectStateSpinner.setOnItemSelectedListener(this);
+        mSelectStateSpinner.setOnClickListener(this);
+        mSelectStateSpinner.setOnFocusChangeListener(this);
+        mSelectCitySpinner.setOnClickListener(this);
+        mSelectCitySpinner.setOnFocusChangeListener(this);
+        mSelectBranchSpinner.setOnClickListener(this);
+        mSelectBranchSpinner.setOnFocusChangeListener(this);
+
+        String[] listSmoke = getResources().getStringArray(R.array.smoking_array);
+        String[] listGender = getResources().getStringArray(R.array.gender_array);
+        setBranchSpinnerArray(listSmoke, mSelectSmoking);
+        setBranchSpinnerArray(listGender, mSelectGender);
     }
 
     private void setStateListDetailsUI(ArrayList<StateList> stateList) {
@@ -104,7 +128,7 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
             tempList.add(listString);
         }
         String[] stringStateArray = tempList.toArray(new String[tempList.size()]);
-        setSpinnerArray(stringStateArray, mSelectStateSpinner);
+        setStateSpinnerArray(stringStateArray, stateList, mSelectStateSpinner);
     }
 
     private void setCityListDetailsUI(ArrayList<CityList> cityList) {
@@ -113,8 +137,8 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
             String listString = cityList.get(i).getCityName().toString();
             tempList.add(listString);
         }
-        String[] stringStateArray = tempList.toArray(new String[tempList.size()]);
-        setSpinnerArray(stringStateArray, mSelectStateSpinner);
+        String[] stringCityArray = tempList.toArray(new String[tempList.size()]);
+        setCitySpinnerArray(stringCityArray, cityList, mSelectCitySpinner);
     }
 
     private void setBranchListDetailsUI(ArrayList<BranchList> branchList) {
@@ -123,8 +147,8 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
             String listString = branchList.get(i).getBranchName().toString();
             tempList.add(listString);
         }
-        String[] stringStateArray = tempList.toArray(new String[tempList.size()]);
-        //setSpinnerArray(stringStateArray, mSelectStateSpinner);
+        String[] stringBranchArray = tempList.toArray(new String[tempList.size()]);
+        setBranchSpinnerArray(stringBranchArray, mSelectBranchSpinner);
     }
 
     private boolean isValidEmail(String email) {
@@ -155,11 +179,98 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
         datePickerDialog.show();
     }
 
-    private void setSpinnerArray(String[] list, final MaterialBetterSpinner spinner) {
+    private void setStateSpinnerArray(final String[] list, final ArrayList<StateList> stateList, final MaterialBetterSpinner spinner) {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, list);
         spinner.setAdapter(adapter);
+        spinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSelectedStateText = spinner.getText().toString();
+                Log.d("BIF", "StateSelectedText:::::" + mSelectedStateText);
+                if (mSelectedCityText != null || mSelectedBranchText != null) {
+                    mSelectCitySpinner.setText("");
+                    mSelectBranchSpinner.setText("");
+                }
+                int id = 0;
+                for (int i = 0; i < stateList.size(); i++) {
+                    if (mSelectedStateText.equals(stateList.get(i).getValue().toString())) {
+                        id = stateList.get(i).getKey();
+                    }
+                }
+                CityListHelper helper = new CityListHelper(BasicInformationFragment.this, mContext);
+                if (id != 0) {
+                    helper.callApi(id);
+                }
+            }
+        });
+    }
+
+    private void setCitySpinnerArray(final String[] list, final ArrayList<CityList> cityList, final MaterialBetterSpinner spinner) {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, list);
+        spinner.setAdapter(adapter);
+        spinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSelectedCityText = spinner.getText().toString();
+                if (mSelectedBranchText != null) {
+                    mSelectBranchSpinner.setText("");
+                }
+                int id = 0;
+                for (int i = 0; i < cityList.size(); i++) {
+                    if (mSelectedCityText.equals(cityList.get(i).getCityName().toString())) {
+                        id = cityList.get(i).getCityId();
+                    }
+                }
+                BranchListHelper helper = new BranchListHelper(BasicInformationFragment.this, mContext);
+                if (id != 0) {
+                    helper.callApi(id);
+                }
+            }
+        });
+    }
+
+    private void setBranchSpinnerArray(final String[] list, final MaterialBetterSpinner spinner) {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, list);
+        spinner.setAdapter(adapter);
+        spinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSelectedBranchText = spinner.getText().toString();
+            }
+        });
     }
 
 
@@ -172,8 +283,67 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
                         .replace(R.id.fragment_container, new ProductInformationFragment())
                         .commitNow();
                 break;
+
             case R.id.editDatePicker:
                 setDateField();
+                break;
+
+            case R.id.selectState:
+                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                    if (mStateList != null && !mStateList.isEmpty()) {
+                        mSelectStateSpinner.setError(null);
+                        setStateListDetailsUI(mStateList);
+                    } else {
+                        StateListHelper helper = new StateListHelper(this, mContext);
+                        helper.callApi();
+                        /*ArrayAdapter<String> adapterState = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectStateSpinner.setAdapter(adapterState);
+                        mSelectCitySpinner.setAdapter(adapterState);
+                        mSelectBranchSpinner.setAdapter(adapterState);
+                        mSelectStateSpinner.setError("");*/
+                    }
+                } else {
+                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
+                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                }
+                break;
+
+            case R.id.selectCity:
+                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                    if (mCityList != null && !mCityList.isEmpty()) {
+                        mSelectCitySpinner.setError(null);
+                        setCityListDetailsUI(mCityList);
+                    } else {
+                        ArrayAdapter<String> adapterCity = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectCitySpinner.setAdapter(adapterCity);
+                        mSelectBranchSpinner.setAdapter(adapterCity);
+                        mSelectCitySpinner.setText("");
+                        mSelectCitySpinner.setError(getString(R.string.err_msg_city));
+                    }
+                } else {
+                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
+                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                }
+                break;
+
+            case R.id.selectBranch:
+                if (UiUtils.checkInternetConnection((Activity) mContext)) {
+                    if (mBranchList != null && !mBranchList.isEmpty()) {
+                        mSelectBranchSpinner.setError(null);
+                        setBranchListDetailsUI(mBranchList);
+                    } else {
+                        ArrayAdapter<String> adapterBranch = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectBranchSpinner.setAdapter(adapterBranch);
+                        mSelectBranchSpinner.setText("");
+                        mSelectBranchSpinner.setError(getString(R.string.err_msg_branch));
+                    }
+                } else {
+                    UiUtils.showErrorAlert(mContext.getString(R.string.error_dialog_header),
+                            mContext.getString(R.string.offline_mode_error), (Activity) mContext, 0);
+                }
                 break;
         }
     }
@@ -184,6 +354,52 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
             case R.id.editDatePicker:
                 if (hasFocus) {
                     setDateField();
+                }
+                break;
+
+            case R.id.selectState:
+                if (hasFocus) {
+                    if (mStateList != null && !mStateList.isEmpty()) {
+                        mSelectStateSpinner.setError(null);
+                        setStateListDetailsUI(mStateList);
+                    } else {
+                        ArrayAdapter<String> adapterState = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectStateSpinner.setAdapter(adapterState);
+                        mSelectCitySpinner.setAdapter(adapterState);
+                        mSelectBranchSpinner.setAdapter(adapterState);
+                    }
+                }
+                break;
+
+            case R.id.selectCity:
+                if (hasFocus) {
+                    if (mCityList != null && !mCityList.isEmpty()) {
+                        mSelectCitySpinner.setError(null);
+                        setCityListDetailsUI(mCityList);
+                    } else {
+                        ArrayAdapter<String> adapterCity = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectCitySpinner.setAdapter(adapterCity);
+                        mSelectBranchSpinner.setAdapter(adapterCity);
+                        mSelectCitySpinner.setText("");
+                        mSelectCitySpinner.setError(getString(R.string.err_msg_city));
+                    }
+                }
+                break;
+
+            case R.id.selectBranch:
+                if (hasFocus) {
+                    if (mBranchList != null && !mBranchList.isEmpty()) {
+                        mSelectBranchSpinner.setError(null);
+                        setBranchListDetailsUI(mBranchList);
+                    } else {
+                        ArrayAdapter<String> adapterBranch = new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_dropdown_item_1line);
+                        mSelectBranchSpinner.setAdapter(adapterBranch);
+                        mSelectBranchSpinner.setText("");
+                        mSelectBranchSpinner.setError(getString(R.string.err_msg_branch));
+                    }
                 }
                 break;
         }
@@ -221,26 +437,42 @@ public class BasicInformationFragment extends Fragment implements View.OnClickLi
     }
 
     public void setStateList(ArrayList<StateList> stateList) {
-        setStateListDetailsUI(stateList);
+        mStateList = stateList;
+        if (stateList != null && !stateList.isEmpty()) {
+            setStateListDetailsUI(stateList);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line);
+            mSelectStateSpinner.setAdapter(adapter);
+            mSelectCitySpinner.setAdapter(adapter);
+            mSelectBranchSpinner.setAdapter(adapter);
+        }
+
     }
 
     public void setCityList(ArrayList<CityList> cityList) {
-        setCityListDetailsUI(cityList);
+        mCityList = cityList;
+        if (cityList != null && !cityList.isEmpty()) {
+            setCityListDetailsUI(cityList);
+            mSelectBranchSpinner.setError(null);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line);
+            mSelectCitySpinner.setAdapter(adapter);
+            mSelectBranchSpinner.setAdapter(adapter);
+
+        }
     }
 
     public void setBranchList(ArrayList<BranchList> branchList) {
-        setBranchListDetailsUI(branchList);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = mSelectStateSpinner.getText().toString();
-        Log.d("BIF", "TEXT:::::" + text);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-        Log.d("BIF", "TEXT:::::");
+        mBranchList = branchList;
+        if (branchList != null && !branchList.isEmpty()) {
+            setBranchListDetailsUI(branchList);
+            mSelectBranchSpinner.setError(null);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line);
+            mSelectBranchSpinner.setAdapter(adapter);
+        }
     }
 }

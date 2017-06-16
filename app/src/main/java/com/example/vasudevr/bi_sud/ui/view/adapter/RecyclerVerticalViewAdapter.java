@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vasudevr.bi_sud.R;
@@ -54,7 +53,7 @@ public class RecyclerVerticalViewAdapter extends RecyclerView.Adapter<RecyclerVe
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_list_row, parent, false);
+                .inflate(R.layout.product_vertical_list_layout, parent, false);
         return new MyViewHolder(itemView);
     }
 

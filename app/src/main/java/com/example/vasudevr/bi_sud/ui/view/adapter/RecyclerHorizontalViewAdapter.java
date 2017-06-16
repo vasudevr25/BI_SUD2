@@ -2,9 +2,7 @@ package com.example.vasudevr.bi_sud.ui.view.adapter;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import com.example.vasudevr.bi_sud.R;
 import com.example.vasudevr.bi_sud.network.model.ProductList;
 import com.example.vasudevr.bi_sud.ui.view.fragment.BasicInformationFragment;
 import com.example.vasudevr.bi_sud.ui.view.fragment.LandingFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -31,6 +30,8 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
     private Context mContext;
     private LandingFragment mFragment;
     private ArrayList<ProductList> productArrayList;
+    private String mImageURL;
+    private static final String IMAGE_URL = "http://bitoolweb.beta.nvest.in/images/ProductImages/";
 
     // Keep all Images in array
     public int[] mThumbIds = {
@@ -50,6 +51,7 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
         public LinearLayout productLayout;
         public ImageView productImage;
         public TextView productName;
+        public TextView productDescription;
 
 
         public MyViewHolder(View view) {
@@ -57,6 +59,7 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
             productLayout = (LinearLayout) view.findViewById(R.id.product_layout);
             productImage = (ImageView) view.findViewById(R.id.product_image_view);
             productName = (TextView) view.findViewById(R.id.product_name);
+            productDescription = (TextView) view.findViewById(R.id.product_description);
         }
     }
 
@@ -76,14 +79,15 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(RecyclerHorizontalViewAdapter.MyViewHolder holder, int position) {
         Log.d("RecyclerHorizontal", "Position::::" + position);
-        //holder.productImage.setImageResource(mThumbIds[position]);
+        Picasso.with(mContext).load(IMAGE_URL + productArrayList.get(position).getImageUrl()).into(holder.productImage);
+        holder.productDescription.setText(productArrayList.get(position).getDescription());
         holder.productName.setText(productArrayList.get(position).getProductName());
         holder.productLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = mFragment.getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new BasicInformationFragment())
+                        .replace(R.id.fragment_container, new BasicInformationFragment(mContext))
                         .commitNow();
             }
         });
@@ -93,4 +97,5 @@ public class RecyclerHorizontalViewAdapter extends RecyclerView.Adapter<Recycler
     public int getItemCount() {
         return productArrayList.size();
     }
+
 }

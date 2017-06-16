@@ -45,5 +45,9 @@
     <string name="search_product">Search Product</string>
     <string name="err_msg_email">Not a valid email address!</string>
     <string name="err_msg_number">Not a valid mobile number!</string>
-
+    <string name="err_msg_city">Please select state first!</string>
+    <string name="err_msg_branch">Please select city first!</string>
+    <string name="error_dialog_header">Error</string>
+    <string name="offline_mode_error">Please connect to network and try again.</string>
+    <string name="loading">Loading..</string>
 </resources>
